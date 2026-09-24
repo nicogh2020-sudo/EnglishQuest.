@@ -1,0 +1,1067 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EngliQuest - Level Up Your English</title>
+    <style>
+        :root {
+            --primary-color: #1a6b7d;
+            --secondary-color: #fcaa27d2;
+            --bg-gradient: linear-gradient(135deg, #e0f7fa 0%, #fffde7 100%);
+            --text-dark: #2c3e50;
+            --text-light: #ffffff;
+            --card-bg: #ffffff;
+            --success-color: #2ecc71;
+            --xp-color: #f39c12;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: var(--bg-gradient);
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+
+        .view-section {
+            display: none;
+        }
+
+        .view-section.active-view {
+            display: block;
+        }
+
+        nav {
+            background-color: var(--card-bg);
+            padding: 1rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-dark);
+            margin-left: 20px;
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary-color);
+        }
+
+        .xp-container {
+            background-color: #ecf0f1;
+            border-radius: 20px;
+            width: 200px;
+            height: 28px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid #bdc3c7;
+        }
+
+        .xp-bar {
+            background-color: var(--xp-color);
+            height: 100%;
+            width: 0%;
+            position: absolute;
+            left: 0;
+            top: 0;
+            transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.3s;
+            z-index: 1;
+        }
+
+        .xp-text {
+            position: relative;
+            z-index: 2;
+            font-size: 0.85rem;
+            font-weight: bold;
+            color: #2c3e50;
+            text-shadow: 1px 1px 0px rgba(255, 255, 255, 0.7);
+        }
+
+        .hero {
+            text-align: center;
+            padding: 5rem 2rem;
+            background-color: var(--primary-color);
+            color: var(--text-light);
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 2.5rem;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 25px;
+            border-radius: 30px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            text-decoration: none;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            margin: 5px;
+            border: none;
+            text-align: center;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: var(--text-light);
+            border: 2px solid var(--primary-color);
+        }
+
+        .btn-secondary {
+            background-color: var(--secondary-color);
+            color: var(--text-light);
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .features {
+            padding: 4rem 5%;
+            text-align: center;
+        }
+
+        .features h2 {
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            color: var(--primary-color);
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background: var(--card-bg);
+            padding: 2.5rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+        }
+
+        .card h3 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+
+        .level-card {
+            cursor: pointer;
+            border: 3px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .level-card:hover {
+            border-color: var(--secondary-color);
+            background-color: #fffde7;
+        }
+
+        .level-badge {
+            background: var(--primary-color);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            display: inline-block;
+            margin-bottom: 1rem;
+        }
+
+        .class-container {
+            max-width: 800px;
+            margin: 3rem auto;
+            background: white;
+            padding: 2.5rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+        }
+
+        .class-header {
+            border-bottom: 3px solid var(--secondary-color);
+            padding-bottom: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .class-content-box {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 10px;
+            border-left: 5px solid var(--primary-color);
+            margin-bottom: 2rem;
+        }
+
+        /* === NUEVOS ESTILOS DEL BOTÓN DE YOUTUBE === */
+        .youtube-quest-container {
+            text-align: center;
+            padding: 2rem 1rem;
+            background: #ffffff;
+            border-radius: 12px;
+            border: 2px dashed #e0e0e0;
+            margin-bottom: 2rem;
+        }
+
+        .youtube-quest-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            background: linear-gradient(135deg, #ff0000 0%, #cc0000 100%);
+            color: #ffffff;
+            padding: 15px 35px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-size: 1.2rem;
+            font-weight: bold;
+            box-shadow: 0 10px 20px rgba(255, 0, 0, 0.2);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: 2px solid transparent;
+            animation: pulseYoutube 2s infinite;
+        }
+
+        .youtube-quest-btn:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 15px 25px rgba(255, 0, 0, 0.4);
+            background: linear-gradient(135deg, #cc0000 0%, #ff0000 100%);
+            border-color: #ffffff;
+            color: #ffffff;
+            animation: none;
+        }
+
+        .youtube-icon {
+            width: 28px;
+            height: 28px;
+            fill: currentColor;
+        }
+
+        @keyframes pulseYoutube {
+            0% { box-shadow: 0 0 0 0 rgba(255, 0, 0, 0.5); }
+            70% { box-shadow: 0 0 0 15px rgba(255, 0, 0, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(255, 0, 0, 0); }
+        }
+        /* ========================================= */
+
+        .option-btn {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            margin-bottom: 10px;
+            background-color: #ffffff;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            color: var(--text-dark);
+            cursor: pointer;
+            text-align: left;
+            transition: all 0.2s ease;
+            font-weight: 500;
+        }
+
+        .option-btn:hover {
+            border-color: var(--primary-color);
+            background-color: #e0f7fa;
+            transform: translateX(5px);
+        }
+
+        .memory-board {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            max-width: 500px;
+            margin: 1.5rem auto;
+            perspective: 1000px;
+        }
+
+        .memory-card {
+            width: 100%;
+            aspect-ratio: 1 / 1;
+            background-color: transparent;
+            cursor: pointer;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.5s;
+        }
+
+        .memory-card.flip {
+            transform: rotateY(180deg);
+        }
+
+        .memory-card .front-face, .memory-card .back-face {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            border-radius: 8px;
+            backface-visibility: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            font-weight: bold;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .memory-card .front-face {
+            background-color: #ffffff;
+            color: var(--primary-color);
+            border: 2px solid var(--primary-color);
+            transform: rotateY(180deg);
+        }
+
+        .memory-card .back-face {
+            background-color: var(--secondary-color);
+            color: white;
+            font-size: 2rem;
+            border: 2px solid #d38b1c;
+        }
+
+        #phoneticsExplanation h4 {
+            color: #d38b1c;
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 5px;
+        }
+
+        #phoneticsExplanation p { margin-bottom: 10px; font-size: 0.95rem; }
+        #phoneticsExplanation ul { margin-left: 20px; font-size: 0.95rem; }
+        #phoneticsExplanation li { margin-bottom: 8px; }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 10% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 90%;
+            max-width: 600px;
+            border-radius: 10px;
+            position: relative;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover { color: black; }
+
+        .progress-bar-container {
+            width: 100%;
+            background-color: #e0e0e0;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            overflow: hidden;
+            height: 10px;
+        }
+
+        .progress-bar {
+            height: 100%;
+            width: 5%;
+            background-color: var(--primary-color);
+            transition: width 0.3s ease;
+        }
+
+        .step { display: none; }
+        .step.active { display: block; }
+
+        footer {
+            background-color: var(--text-dark);
+            color: var(--text-light);
+            text-align: center;
+            padding: 2rem;
+            margin-top: 4rem;
+        }
+
+        footer p {
+            font-size: 0.9rem;
+            opacity: 0.8;
+            margin-top: 10px;
+        }
+
+        .mascot-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .mascot {
+            width: 130px;
+            height: auto;
+            animation: bounceAndFloat 2s ease-in-out infinite;
+            filter: drop-shadow(0px 8px 10px rgba(0, 0, 0, 0.15));
+        }
+
+        @keyframes bounceAndFloat {
+            0%, 100% { transform: translateY(0) scale(1) rotate(0deg); }
+            50% { transform: translateY(-15px) scale(1.05) rotate(3deg); }
+        }
+    </style>
+</head>
+<body>
+
+<nav>
+    <div class="logo" onclick="showView('landingView')"><span>EngliQuest</span></div>
+    <div class="nav-links">
+        <a href="#ruta" onclick="showView('landingView')">Ruta de Aprendizaje</a>
+        <a href="#metodologia" onclick="showView('landingView')">Metodología</a>
+        <a href="#" onclick="showView('levelsView')">Mis Misiones (Niveles)</a>
+    </div>
+    <div class="xp-container" title="¡Completa misiones y retos para subir de nivel!">
+        <div class="xp-bar" id="globalXpBar"></div>
+        <span class="xp-text" id="xpText">Lvl 1 | 0/100 XP</span>
+    </div>
+</nav>
+
+<!-- LANDING VIEW -->
+<div id="landingView" class="view-section active-view">
+    <section class="hero">
+        <h1>Level Up Your English. No Boring Textbooks Required.</h1>
+        <p>Transformamos el aprendizaje de una segunda lengua en una experiencia dinámica y accesible a través de videojuegos, música y actividades inmersivas. ¡Progresa a tu propio ritmo!</p>
+        <div>
+            <button onclick="showView('levelsView')" class="btn btn-secondary">[ Start Your Quest Today ]</button>
+            <button id="openModalBtn" class="btn btn-primary">[ Take the Placement Test ]</button>
+        </div>
+    </section>
+
+    <section id="metodologia" class="features">
+        <h2>¿Por qué elegir EngliQuest?</h2>
+        <div class="grid">
+            <div class="card">
+                <h3>Inmersión Multimodal</h3>
+                <p>Aprende gramática funcional y vocabulario mediante videojuegos, música y creatividad. Reducimos el filtro afectivo para una adquisición natural del idioma.</p>
+            </div>
+            <div class="card" id="ruta">
+                <h3>Ruta Escalonada</h3>
+                <p>Desde competencias básicas hasta la fluidez oral (Speaking) y uso de modismos (Slang). Un sistema de diagnóstico ajusta las misiones a tu nivel real.</p>
+            </div>
+            <div class="card">
+                <h3>Aprendizaje Autónomo</h3>
+                <p>Estudia de manera voluntaria vinculando el inglés con tus aficiones diarias. Fomentamos una disciplina de estudio sin evaluaciones punitivas.</p>
+            </div>
+        </div>
+    </section>
+    
+    <!-- NUEVA SECCIÓN DE RECORDATORIO (EN SECCIÓN APARTE) -->
+    <section id="recordatorio" class="features" style="padding-top: 0;">
+        <div style="background-color: #fffde7; border-left: 5px solid var(--xp-color); padding: 1.5rem; margin: 0 auto; max-width: 800px; border-radius: 8px; text-align: left; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">
+            <h4 style="color: #d38b1c; margin-bottom: 10px; font-size: 1.2rem;">⏱️ Un recordatorio importante: ¡Juega con equilibrio!</h4>
+            <p style="font-size: 0.95rem; margin-bottom: 0;">Aprender inglés jugando y cumpliendo misiones es increíble, pero te recordamos siempre <strong>establecer límites y tiempos de pantalla</strong>. Tomar descansos regulares te ayudará a evitar la adicción, cuidar tu salud visual y mantener un equilibrio adecuado entre el mundo digital y tus actividades cotidianas.</p>
+        </div>
+    </section>
+    <!-- FIN DE NUEVA SECCIÓN -->
+
+</div>
+
+<!-- LEVELS VIEW -->
+<div id="levelsView" class="view-section">
+    <section class="features">
+        <h2>Selecciona tu Nivel de Quest</h2>
+        <div class="grid">
+            <div class="card level-card" onclick="loadClass('A1')">
+                <div class="level-badge">Principiante</div>
+                <h3>Nivel A1</h3>
+                <p>Misiones de vocabulario básico y comandos de juego.</p>
+            </div>
+            <div class="card level-card" onclick="loadClass('A2')">
+                <div class="level-badge">Elemental</div>
+                <h3>Nivel A2</h3>
+                <p>Pasado simple, rutinas y descripciones (Quest Logs).</p>
+            </div>
+            <div class="card level-card" onclick="loadClass('B1')">
+                <div class="level-badge">Intermedio</div>
+                <h3>Nivel B1</h3>
+                <p>Planes futuros y logros desbloqueados (Present Perfect).</p>
+            </div>
+            <div class="card level-card" onclick="loadClass('B2')">
+                <div class="level-badge">Intermedio Alto</div>
+                <h3>Nivel B2</h3>
+                <p>Toma de decisiones en cinemáticas (Condicionales).</p>
+            </div>
+            <div class="card level-card" onclick="loadClass('C1')">
+                <div class="level-badge">Avanzado / Experto</div>
+                <h3>Nivel C1/C2</h3>
+                <p>Modismos nativos, jerga gamer y fluidez de debate.</p>
+            </div>
+        </div>
+    </section>
+</div>
+
+<!-- CLASS VIEW -->
+<div id="classView" class="view-section">
+    <div class="class-container">
+        <button onclick="showView('levelsView')" class="btn btn-secondary" style="margin-bottom: 1rem;">← Volver a Niveles</button>
+        <div class="class-header">
+            <h2 id="classLevelTitle">Clase de Nivel</h2>
+            <p id="classTopic">Cargando temática...</p>
+        </div>
+        <div class="class-content-box">
+            <!-- NUEVO BOTÓN DE YOUTUBE -->
+            <div id="videoContainer" class="youtube-quest-container" style="display: none;">
+                <h3 style="color: var(--primary-color); margin-bottom: 10px;">🎥 Cinemática de Misión</h3>
+                <p style="margin-bottom: 20px; color: #555;">Mira la guía visual para entender tu próximo objetivo.</p>
+                <a id="classVideoBtn" href="#" target="_blank" class="youtube-quest-btn">
+                    <svg class="youtube-icon" viewBox="0 0 24 24">
+                        <path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"/>
+                    </svg>
+                    [ Ver Cinemática en YouTube ]
+                </a>
+            </div>
+            <!-- FIN NUEVO BOTÓN -->
+            <h3>Contenido Teórico Funcional</h3><br>
+            <div id="classBody"></div>
+        </div>
+
+        <!-- JUEGO DE MEMORIA (A1) -->
+        <div id="gameAreaA1" style="display: none; background: white; padding: 1.5rem; border-radius: 10px; border: 2px dashed var(--primary-color); margin-top: 2rem; text-align: center;">
+            <div class="mascot-container">
+                <img src="mascota_nivel1.png" alt="Mascota Nivel A1" class="mascot">
+            </div>
+            <h3 style="color: var(--primary-color);">Mini-Quest: Match the Verbs! (+15 XP por acierto)</h3>
+            <p>Encuentra las parejas: Verbo en inglés con su significado.</p>
+            <div class="memory-board" id="memoryBoard"></div>
+            <button class="btn btn-secondary" id="resetGameBtn" style="display: none; margin-top: 1rem;" onclick="initMemoryGame()">Jugar de nuevo</button>
+        </div>
+
+        <!-- RETO FONÉTICO CON EXPLICACIÓN DETALLADA -->
+        <div id="phoneticsArea" style="display: none; background: #fffde7; padding: 1.5rem; border-radius: 10px; border: 2px dashed #d38b1c; margin-top: 2rem; text-align: center;">
+            <h3 style="color: #d38b1c;">Phonetics Mini-Quest (+20 XP por acierto)</h3>
+            <p>Estudia la guía fonética antes de iniciar el desafío de audio mental.</p>
+            <div id="phoneticsExplanation" style="background: white; padding: 1.5rem; border-radius: 8px; margin: 1.5rem 0; text-align: left; border-left: 5px solid #d38b1c; box-shadow: 0 4px 10px rgba(0,0,0,0.05);"></div>
+            <button class="btn btn-primary" id="startPhoneticsBtn" style="margin-top: 0.5rem; width: 100%;">Iniciar Reto Fonético</button>
+        </div>
+    </div>
+</div>
+
+<!-- GAME VIEW (FONETICA) -->
+<div id="gameView" class="view-section">
+    <div class="class-container" style="text-align: center;">
+        <div id="phoneticsMascotContainer" class="mascot-container"></div>
+        <h2 style="color: var(--primary-color);">Phonetics Challenge</h2>
+        <div id="gameContainer" style="margin: 2rem 0;"></div>
+        <div id="gameFeedback" style="font-size: 1.2rem; font-weight: bold; height: 40px;"></div>
+        <button class="btn btn-secondary" onclick="showView('classView')">Volver a la Clase</button>
+    </div>
+</div>
+
+<!-- MODAL PLACEMENT TEST -->
+<div id="diagnosticoModal" class="modal">
+    <div class="modal-content">
+        <span class="close" id="closeModalBtn">&times;</span>
+        <h2 style="color: var(--primary-color); margin-bottom: 1rem; text-align: center;">Placement Test</h2>
+        <div class="progress-bar-container">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+        <div id="testContainer"></div>
+        <div id="testResult" style="display: none; text-align: center;"></div>
+    </div>
+</div>
+
+<footer>
+    <h3>Misión EngliQuest</h3>
+    <p>Democratizar el bilingüismo: Construyendo un futuro donde cada estudiante sea un aprendiz autónomo, equipado para triunfar en entornos académicos y profesionales globales.</p>
+    <p>&copy; 2026 EngliQuest Gimnasio Moderno Robinson Crusoe.</p>
+</footer>
+
+<script>
+    let userXP = 0;
+    let currentLevel = 1;
+    let activeQuestLevel = 'A1';
+
+    function addXP(amount) {
+        userXP += amount;
+        currentLevel = Math.floor(userXP / 100) + 1;
+        let xpPercentage = userXP % 100;
+        const xpBar = document.getElementById('globalXpBar');
+        const xpText = document.getElementById('xpText');
+        
+        if (xpBar && xpText) {
+            xpBar.style.width = xpPercentage + '%';
+            xpText.innerHTML = `Lvl ${currentLevel} | ${xpPercentage}/100 XP`;
+            xpBar.style.backgroundColor = '#2ecc71';
+            setTimeout(() => {
+                xpBar.style.backgroundColor = 'var(--xp-color)';
+            }, 400);
+        }
+        
+        if (amount > 0 && xpPercentage - amount < 0) {
+            alert(`¡Felicidades! Has alcanzado el Nivel ${currentLevel} en EngliQuest.`);
+        }
+    }
+
+    function showView(viewId) {
+        document.querySelectorAll('.view-section').forEach(view => {
+            view.classList.remove('active-view');
+        });
+        document.getElementById(viewId).classList.add('active-view');
+        window.scrollTo({top: 0, behavior: 'smooth'});
+    }
+
+    const clasesData = {
+        'A1': {
+            title: "Nivel A1: Presente Simple & Gaming Verbs",
+            topic: "Tema: Acciones inmediatas y vocabulario de interfaz.",
+            videoUrl: "https://youtu.be/ePXSb3aizCY",
+            body: `<p>Para hablar de tus pasatiempos...</p>`
+        },
+        'A2': {
+            title: "Nivel A2: Pasado Simple",
+            topic: "Tema: Acciones pasadas y descripciones.",
+            videoUrl: "https://youtu.be/cvFathhO2xc",
+            body: `<p>Para hablar de acciones pasadas...</p>`
+        },
+        'B1': {
+            title: "Nivel B1: Present Perfect",
+            topic: "Tema: Logros y experiencias.",
+            videoUrl: "https://youtu.be/0jUpb_oFc7w",
+            body: `<p>Para hablar de logros...</p>`
+        },
+        'B2': {
+            title: "Nivel B2: Condicionales",
+            topic: "Tema: Toma de decisiones en juego.",
+            videoUrl: "https://youtu.be/Gvq3s-vsO6A",
+            body: `<p>Para hablar de posibilidades...</p>`
+        },
+        'C1': {
+            title: "Nivel C1/C2: Modismos y Fluidez",
+            topic: "Tema: Jerga gamer y nativa.",
+            videoUrl: "https://youtu.be/U0FT7mkqXv0",
+            body: `<p>Para hablar con fluidez...</p>`
+        }
+    };
+
+    const phoneticsLessons = {
+        'A1': {
+            title: "Vowel Sounds & Basics",
+            explanation: `
+                <h4>Fonética de las Vocales Inglesas</h4>
+                <p>A diferencia del español (que tiene 5 sonidos vocálicos firmes), el inglés emplea variaciones de vocales "largas" y "cortas" que, si se confunden, cambian el significado completo de una palabra.</p>
+                <ul>
+                    <li><strong>El símbolo /ɔː/ (Ej. <em>Water</em>):</strong> Es una 'o' larga. Para pronunciarla, debes redondear tus labios en forma de círculo cerrado y bajar la mandíbula. Se emplea para darle un peso sonoro fuerte a la sílaba tónica.</li>
+                    <li><strong>El símbolo /ɑː/ (Ej. <em>Car</em>):</strong> Es una 'a' profunda. El sonido no se genera en los labios, sino desde la parte posterior de la garganta, con la boca bien abierta. Se emplea para distinguir palabras que de otro modo sonarían igual a oídos nativos.</li>
+                </ul>
+            `,
+            words: [
+                { word: "Water", correctIPA: "/ˈwɔːtə/", wrongIPA: "/waːta/"},
+                { word: "Car", correctIPA: "/kɑː/", wrongIPA: "/kaːr/"}
+            ]
+        },
+        'A2': {
+            title: "Silent R & The Schwa Sound",
+            explanation: `
+                <h4>La 'R' Silenciosa y la Vocal Perezosa</h4>
+                <p>En el inglés británico estándar (RP) y otros acentos no róticos, la letra 'R' no siempre se hace vibrar. Esto genera una forma de hablar mucho más relajada.</p>
+                <ul>
+                    <li><strong>Silent R (Non-rhoticity):</strong> Si la letra 'R' está al final de una palabra o sílaba (y no le sigue una vocal), no se pronuncia fuerte. En palabras como <em>Better</em>, el final simplemente se desvanece.</li>
+                    <li><strong>El símbolo /ə/ (Schwa):</strong> Es el sonido más común del inglés. Es un sonido neutro y "perezoso", parecido a un suspiro o una 'a'/'e' muy débil. Se emplea constantemente para reducir la energía en las sílabas que no llevan el acento principal, permitiendo que la oración fluya rápidamente.</li>
+                </ul>
+            `,
+            words: [
+                { word: "Better", correctIPA: "/ˈbetə/", wrongIPA: "/ˈbetər/"},
+                { word: "Tuesday", correctIPA: "/ˈtjuːzdeɪ/", wrongIPA: "/ˈtuːzdeɪ/"}
+            ]
+        },
+        'B1': {
+            title: "The Interdental Fricative (The 'TH' Sound)",
+            explanation: `
+                <h4>El famoso sonido 'TH'</h4>
+                <p>Es un error común pronunciar el 'TH' como una simple 'T', 'D' o 'S' española. Este sonido es "interdental", lo que significa que involucra interactuar con tus dientes.</p>
+                <ul>
+                    <li><strong>El símbolo /θ/ (Sordo - Ej. <em>Nothing, Thought</em>):</strong> Para articularlo correctamente, <strong>coloca la punta de tu lengua entre los dientes frontales superiores e inferiores</strong>. Luego, expulsa aire suavemente a través del espacio. No debes hacer vibrar las cuerdas vocales en tu garganta.</li>
+                    <li><strong>¿Para qué se emplea?</strong> Su correcta ejecución es vital para no generar malentendidos. Evita que palabras como <em>thought</em> (pensamiento) suenen como <em>taught</em> (enseñó).</li>
+                </ul>
+            `,
+            words: [
+                { word: "Nothing", correctIPA: "/ˈnʌθɪŋ/", wrongIPA: "/ˈnɒtɪŋ/"},
+                { word: "Something", correctIPA: "/ˈsʌmθɪŋ/", wrongIPA: "/ˈsʌmtɪŋ/"},
+                { word: "Thought", correctIPA: "/θɔːt/", wrongIPA: "/tɔːt/"}
+            ]
+        },
+        'B2': {
+            title: "Visual Illusions: The 'OUGH' Pattern",
+            explanation: `
+                <h4>Ilusiones Ortográficas: El grupo OUGH</h4>
+                <p>Al llegar a este nivel, debes aceptar una regla de oro: <em>En inglés, no siempre se pronuncia como se escribe.</em> El grupo de letras "ough" es un remanente histórico que hoy en día tiene múltiples personalidades fonéticas.</p>
+                <ul>
+                    <li><strong>En <em>Through</em> (/θruː/):</strong> Se pronuncia como una 'u' larga, y las letras 'gh' son completamente mudas.</li>
+                    <li><strong>En <em>Thought</em> (/θɔːt/):</strong> Se transforma en una 'o' profunda y alargada.</li>
+                    <li><strong>¿Por qué se emplea esta enseñanza?</strong> Aprender estos símbolos fonéticos entrena tu cerebro para desarrollar un "oído fotográfico". Dejas de leer las letras literales y comienzas a recordar el patrón sonoro invisible de cada palabra.</li>
+                </ul>
+            `,
+            words: [
+                { word: "Schedule", correctIPA: "/ˈʃedjuːl/", wrongIPA: "/ˈskedʒuːl/"},
+                { word: "Through", correctIPA: "/θruː/", wrongIPA: "/θrəʊ/"}
+            ]
+        },
+        'C1': {
+            title: "Connected Speech & Native Pacing",
+            explanation: `
+                <h4>Habla Conectada (Connected Speech)</h4>
+                <p>Para sonar como un hablante nativo (o entenderlos cuando hablan muy rápido en un videojuego multijugador), debes dejar de pronunciar cada palabra como una isla aislada.</p>
+                <ul>
+                    <li><strong>Asimilación y Elisión:</strong> Cuando las palabras chocan en una oración rápida, algunos sonidos se fusionan para crear sonidos nuevos, y otros sonidos difíciles simplemente se eliminan (elisión) para ahorrar esfuerzo bucal.</li>
+                    <li><strong>¿Para qué se emplea?</strong> El inglés es un idioma <em>Stress-timed</em> (basado en el acento). Esto significa que el tiempo que toma decir una oración depende del número de sílabas fuertes, no del total de palabras. Usar la habla conectada te permite comprimir palabras funcionales y mantener el ritmo rítmico nativo.</li>
+                </ul>
+            `,
+            words: [
+                { word: "Aluminium", correctIPA: "/ˌæljʊˈmɪniəm/", wrongIPA: "/əˈluːmɪnəm/"},
+                { word: "Garage", correctIPA: "/ˈɡærɑːʒ/", wrongIPA: "/ɡəˈrɑːʒ/"}
+            ]
+        }
+    };
+
+    function loadClass(levelKey) {
+        activeQuestLevel = levelKey;
+        const data = clasesData[levelKey];
+        if (data) {
+            document.getElementById('classLevelTitle').innerHTML = data.title;
+            document.getElementById('classTopic').innerHTML = data.topic;
+            document.getElementById('classBody').innerHTML = data.body;
+            
+            const videoContainer = document.getElementById('videoContainer');
+            const classVideoBtn = document.getElementById('classVideoBtn');
+            
+            if (data.videoUrl && data.videoUrl.trim() !== "") {
+                classVideoBtn.href = data.videoUrl;
+                videoContainer.style.display = 'block';
+            } else {
+                classVideoBtn.href = '#';
+                videoContainer.style.display = 'none';
+            }
+            
+            const gameAreaA1 = document.getElementById('gameAreaA1');
+            if (levelKey === 'A1') {
+                gameAreaA1.style.display = 'block';
+                initMemoryGame();
+            } else {
+                gameAreaA1.style.display = 'none';
+            }
+            
+            const phoneticsArea = document.getElementById('phoneticsArea');
+            if (phoneticsLessons[levelKey]) {
+                phoneticsArea.style.display = 'block';
+                document.getElementById('phoneticsExplanation').innerHTML = phoneticsLessons[levelKey].explanation;
+                document.getElementById('startPhoneticsBtn').onclick = () => startPhoneticsGame(phoneticsLessons[levelKey].words);
+            } else {
+                phoneticsArea.style.display = 'none';
+            }
+            
+            showView('classView');
+        }
+    }
+
+    let currentLessonWords = [];
+    let currentGameIndex = 0;
+
+    function startPhoneticsGame(words) {
+        currentLessonWords = words;
+        currentGameIndex = 0;
+        
+        const mascotMap = {
+            'A1': 'mascota_nivel1.png',
+            'A2': 'mascota_nivel2.png',
+            'B1': 'mascota_nivel3.png',
+            'B2': 'mascota_nivel4.png',
+            'C1': 'mascota_nivel5.png'
+        };
+        
+        const mascotContainer = document.getElementById('phoneticsMascotContainer');
+        if (mascotContainer) {
+            mascotContainer.innerHTML = `<img src="${mascotMap[activeQuestLevel]}" alt="Mascot ${activeQuestLevel}" class="mascot">`;
+        }
+        showView('gameView');
+        loadPhoneticsQuestion();
+    }
+
+    function loadPhoneticsQuestion() {
+        const container = document.getElementById("gameContainer");
+        const feedback = document.getElementById("gameFeedback");
+        feedback.innerHTML = "";
+        
+        if (currentGameIndex >= currentLessonWords.length) {
+            container.innerHTML = `<h3 style='color: var(--success-color);'>¡Quest Fonético Completado!</h3><p>Sigue completando misiones para subir de nivel.</p>`;
+            return;
+        }
+        
+        const currentWord = currentLessonWords[currentGameIndex];
+        const options = [currentWord.correctIPA, currentWord.wrongIPA].sort(() => Math.random() - 0.5);
+        
+        container.innerHTML = `
+            <h3>Select the correct pronunciation for:</h3>
+            <strong style="font-size: 2.5em; color: var(--primary-color); display:block; margin: 1rem 0;">${currentWord.word}</strong>
+            <div style="display: flex; justify-content:center; gap: 15px; margin-top: 20px;">
+                <button class="option-btn" style="max-width: 200px; text-align: center;" onclick="checkPhonetics('${options[0]}', '${currentWord.correctIPA}')">${options[0]}</button>
+                <button class="option-btn" style="max-width: 200px; text-align: center;" onclick="checkPhonetics('${options[1]}', '${currentWord.correctIPA}')">${options[1]}</button>
+            </div>
+        `;
+    }
+
+    function checkPhonetics(selected, correct) {
+        const feedback = document.getElementById("gameFeedback");
+        if (selected === correct) {
+            addXP(20);
+            feedback.innerHTML = "<span style='color: var(--success-color);'>Spot on! Correcto. (+20 XP)</span>";
+            currentGameIndex++;
+            setTimeout(loadPhoneticsQuestion, 1200);
+        } else {
+            feedback.innerHTML = "<span style='color: #e74c3c;'>Not quite. ¡Inténtalo de nuevo!</span>";
+        }
+    }
+
+    const verbPairs = [
+        { id: '1', text: 'Play' }, { id: '1', text: 'Jugar' },
+        { id: '2', text: 'Run' }, { id: '2', text: 'Correr' },
+        { id: '3', text: 'Jump' }, { id: '3', text: 'Saltar' },
+        { id: '4', text: 'Start' }, { id: '4', text: 'Iniciar' }
+    ];
+    
+    let hasFlippedCard = false;
+    let lockBoard = false;
+    let firstCard, secondCard;
+    let matchedPairs = 0;
+
+    function initMemoryGame() {
+        const board = document.getElementById('memoryBoard');
+        if (!board) return;
+        board.innerHTML = '';
+        matchedPairs = 0;
+        
+        const resetBtn = document.getElementById('resetGameBtn');
+        if (resetBtn) resetBtn.style.display = 'none';
+        
+        const shuffledCards = [...verbPairs].sort(() => Math.random() - 0.5);
+        shuffledCards.forEach(item => {
+            const cardElement = document.createElement('div');
+            cardElement.classList.add('memory-card');
+            cardElement.dataset.pairId = item.id;
+            cardElement.innerHTML = `<div class="front-face">${item.text}</div><div class="back-face">?</div>`;
+            cardElement.addEventListener('click', flipCard);
+            board.appendChild(cardElement);
+        });
+    }
+
+    function flipCard() {
+        if (lockBoard || this === firstCard) return;
+        this.classList.add('flip');
+        if (!hasFlippedCard) {
+            hasFlippedCard = true;
+            firstCard = this;
+            return;
+        }
+        hasFlippedCard = false;
+        secondCard = this;
+        checkForMatch();
+    }
+
+    function checkForMatch() {
+        let isMatch = firstCard.dataset.pairId === secondCard.dataset.pairId;
+        if (isMatch) {
+            addXP(15);
+            disableCards();
+            matchedPairs++;
+            if (matchedPairs === verbPairs.length / 2) {
+                setTimeout(() => {
+                    alert("¡Quest de Memoria Completado!");
+                    const resetBtn = document.getElementById('resetGameBtn');
+                    if (resetBtn) resetBtn.style.display = 'inline-block';
+                }, 500);
+            }
+        } else {
+            unflipCards();
+        }
+    }
+
+    function disableCards() {
+        firstCard.removeEventListener('click', flipCard);
+        secondCard.removeEventListener('click', flipCard);
+        resetBoard();
+    }
+
+    function unflipCards() {
+        lockBoard = true;
+        setTimeout(() => {
+            firstCard.classList.remove('flip');
+            secondCard.classList.remove('flip');
+            resetBoard();
+        }, 1000);
+    }
+
+    function resetBoard() {
+        [hasFlippedCard, lockBoard] = [false, false];
+        [firstCard, secondCard] = [null, null];
+    }
+
+    const totalQuestions = 20;
+    const testContainer = document.getElementById("testContainer");
+    const progressBar = document.getElementById("progressBar");
+    const modal = document.getElementById("diagnosticoModal");
+
+    // Corrección de los saltos de línea inválidos en el Array
+    const questions = [
+        { id: 1, q: "I am playing video games right now.", options: ["am", "is", "are"], ans: "am" },
+        { id: 2, q: "Yesterday, my team won the final match.", options: ["win", "won", "winning"], ans: "won" },
+        { id: 3, q: "I have listened to this song three times.", options: ["hear", "listened", "listening"], ans: "listened" },
+        { id: 4, q: "If you unlock all achievements, you will get a reward.", options: ["get", "would get", "will get"], ans: "will get" },
+        { id: 5, q: "She goes to the gym every morning.", options: ["go", "goes", "going"], ans: "goes" },
+        { id: 6, q: "Have you ever been to London?", options: ["Have", "Has", "Did"], ans: "Have" },
+        { id: 7, q: "This cake was made by my grandmother.", options: ["make", "making", "made"], ans: "made" },
+        { id: 8, q: "I'm looking forward to seeing you next week.", options: ["to see", "to seeing", "see"], ans: "to seeing" },
+        { id: 9, q: "He was sleeping when I called him.", options: ["was sleeping", "slept", "sleeps"], ans: "was sleeping" },
+        { id: 10, q: "This is the best book I have ever read.", options: ["good", "better", "best"], ans: "best" },
+        { id: 11, q: "If I were you, I would study more.", options: ["am", "was", "were"], ans: "were" },
+        { id: 12, q: "They have been living here for five years.", options: ["have been", "are", "were"], ans: "have been" },
+        { id: 13, q: "By next year, I will have finished my degree.", options: ["will finish", "will have finished", "finish"], ans: "will have finished" },
+        { id: 14, q: "She suggested going to the park.", options: ["to go", "going", "go"], ans: "going" },
+        { id: 15, q: "Hardly had I finished my coffee when the phone rang.", options: ["I had", "had I", "did I"], ans: "had I" },
+        { id: 16, q: "I wish I had more time to travel.", options: ["have", "had", "would have"], ans: "had" },
+        { id: 17, q: "The report will be submitted by the manager by tomorrow.", options: ["will submit", "will be submitted", "will have submitted"], ans: "will be submitted" },
+        { id: 18, q: "It's high time we went home.", options: ["go", "went", "have gone"], ans: "went" },
+        { id: 19, q: "Not only was he late, but he also forgot his keys.", options: ["was", "did", "he was"], ans: "was" },
+        { id: 20, q: "Should you need any help, let me know.", options: ["need", "needed", "have needed"], ans: "need" }
+    ];
+
+    function buildTest() {
+        if (!testContainer) return;
+        testContainer.innerHTML = "";
+        
+        questions.forEach((item, index) => {
+            const stepDiv = document.createElement("div");
+            stepDiv.className = index === 0 ? 'step active' : 'step';
+            stepDiv.id = 'step' + (index + 1);
+            let optionsHtml = item.options.map(opt => `<button class="option-btn" onclick="responder(${index + 1}, '${opt}')">${opt}</button>`).join('');
+            stepDiv.innerHTML = `<div class="question"><p><strong>${index + 1}.</strong> ${item.q}</p>${optionsHtml}</div>`;
+            testContainer.appendChild(stepDiv);
+        });
+    }
+
+    let currentScore = 0;
+
+    function responder(id, answer) {
+        if (answer === questions[id - 1].ans) currentScore++;
+        if (id < totalQuestions) {
+            const currentStep = document.getElementById('step' + id);
+            const nextStep = document.getElementById('step' + (id + 1));
+            
+            if (currentStep) currentStep.classList.remove('active');
+            if (nextStep) nextStep.classList.add('active');
+            
+            if (progressBar) progressBar.style.width = ((id + 1) / totalQuestions) * 100 + "%";
+        } else {
+            mostrarResultados();
+        }
+    }
+
+    function mostrarResultados() {
+        if (!testContainer) return;
+        testContainer.innerHTML = "";
+        const resultDiv = document.getElementById("testResult");
+        const percentage = (currentScore / totalQuestions) * 100;
+        
+        // Corrección del salto de línea de la variable level
+        let level = percentage < 25 ? "A1 (Beginner)" : percentage < 50 ? "A2 (Elementary)" : percentage < 75 ? "B1/B2 (Intermediate)" : "C1/C2 (Advanced)";
+        
+        if (resultDiv) {
+            resultDiv.innerHTML = `<h3>Result: ${currentScore}/${totalQuestions}</h3><p>Your level: <strong>${level}</strong></p><br><button class="btn btn-secondary" onclick="closeAndGoToLevels()">Go to Lessons</button>`;
+            resultDiv.style.display = "block";
+        }
+    }
+
+    function closeAndGoToLevels() {
+        if (modal) modal.style.display = "none";
+        currentScore = 0;
+        const resDiv = document.getElementById("testResult");
+        if (resDiv) resDiv.style.display = "none";
+        buildTest();
+        if (progressBar) progressBar.style.width = "5%";
+        showView('levelsView');
+    }
+
+    const openBtn = document.getElementById("openModalBtn");
+    if (openBtn) {
+        openBtn.onclick = () => {
+            buildTest();
+            if (modal) modal.style.display = "block";
+        };
+    }
+
+    const closeBtn = document.getElementById("closeModalBtn");
+    if (closeBtn) {
+        closeBtn.onclick = () => {
+            if (modal) modal.style.display = "none";
+        };
+    }
+
+    window.onclick = (e) => {
+        if (e.target == modal) {
+            if (modal) modal.style.display = "none";
+        }
+    };
+
+    document.addEventListener('DOMContentLoaded', () => {
+        addXP(0);
+        buildTest();
+    });
+</script>
+</body>
+</html>
